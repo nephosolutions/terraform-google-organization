@@ -13,7 +13,7 @@
 # limitations under the License.
 
 variable "billing_account" {
-  description = "The billing_account to which the project should be attached to"
+  description = "The billing_account to which the projects should be attached to"
   type        = string
 }
 
@@ -219,6 +219,12 @@ variable "default_zone" {
 variable "editors" {
   description = "Identities that will be granted the basic role `editor` on the organization"
   type        = list(string)
+}
+
+variable "essential_contacts_language" {
+  description = "Essential Contacts preferred language for notifications, as a ISO 639-1 language code. See [Supported languages](https://cloud.google.com/resource-manager/docs/managing-notification-contacts#supported-languages) for a list of supported languages."
+  type        = string
+  default     = "en"
 }
 
 variable "iam_audit_config" {

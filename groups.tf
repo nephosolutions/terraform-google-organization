@@ -12,16 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-data "google_organization" "org" {
-  count        = var.cloud_identity_groups.create_groups ? 1 : 0
-  organization = var.org_id
-}
-
 locals {
   cloud_identity_groups = {
     for key, value in var.cloud_identity_groups.required_groups : key => value
     if var.cloud_identity_groups.create_groups == true
   }
+
+  group_audit_viewers      = var.cloud_identity_groups.required_groups.audit_viewers.id
+  group_billing_admins     = var.cloud_identity_groups.required_groups.billing_admins.id
+  group_billing_data_users = var.cloud_identity_groups.required_groups.billing_data_users.id
+  group_network_viewers    = var.cloud_identity_groups.required_groups.network_viewers.id
+  group_org_admins         = var.cloud_identity_groups.required_groups.org_admins.id
+  group_platform_viewers   = var.cloud_identity_groups.required_groups.platform_viewers.id
+  group_scc_admins         = var.cloud_identity_groups.required_groups.scc_admins.id
+  group_security_reviewers = var.cloud_identity_groups.required_groups.security_reviewers.id
 }
 
 module "cloud_identity_group" {
@@ -32,7 +36,7 @@ module "cloud_identity_group" {
   id           = each.value["id"]
   display_name = each.value["display_name"]
   description  = each.value["description"]
-  customer_id  = data.google_organization.org[0].directory_customer_id
+  customer_id  = data.google_organization.org.directory_customer_id
   owners       = each.value["owners"]
   managers     = each.value["managers"]
   members      = each.value["members"]

@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+data "google_organization" "org" {
+  organization = var.org_id
+}
+
 module "audit_config" {
   source   = "./modules/audit_config"
   for_each = var.iam_audit_config
