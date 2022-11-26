@@ -13,8 +13,202 @@
 # limitations under the License.
 
 variable "billing_account" {
-  description = "the billing_account to which the project should be attached to"
+  description = "The billing_account to which the project should be attached to"
   type        = string
+}
+
+variable "cloud_identity_groups" {
+  description = "Contains the details of the Cloud Identity groups to be created."
+
+  type = object({
+    create_groups   = bool
+    billing_project = string
+    required_groups = object({
+      audit_viewers = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      billing_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      billing_data_users = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      monitoring_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      network_viewers = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      org_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      platform_viewers = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      scc_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      secrets_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      security_admins = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+      security_reviewers = object({
+        id           = string
+        display_name = string
+        description  = string
+        owners       = list(string)
+        managers     = list(string)
+        members      = list(string)
+      })
+    })
+  })
+
+  default = {
+    create_groups   = false
+    billing_project = ""
+    required_groups = {
+      audit_viewers = {
+        id           = "gcp-audit-viewers@example.com"
+        display_name = "GCP Audit Viewers"
+        description  = "Members are part of an audit team and view audit logs in the logging project."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      billing_admins = {
+        id           = "gcp-billing-admins@example.com"
+        display_name = "GCP Billing Admins"
+        description  = "Billing admins are responsible for setting up billing accounts and monitoring their usage."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      billing_data_users = {
+        id           = "gcp-billing-data-users@example.com"
+        display_name = "GCP Billing Data Users"
+        description  = "Members are authorized to view the spend on projects. Typical members are part of the finance team."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      monitoring_admins = {
+        id           = "gcp-monitoring-admins@example.com"
+        display_name = "GCP Monitoring Admins"
+        description  = "Members have access to Monitoring Workspaces."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      network_viewers = {
+        id           = "gcp-network-viewers@example.com"
+        display_name = "GCP Network Viewers"
+        description  = "Members are part of the networking team and review network configurations."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      org_admins = {
+        id           = "gcp-organization-admins@example.com"
+        display_name = "GCP Organization Admins"
+        description  = "Organization admins are responsible for organizing the structure of the resources used by the organization."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      platform_viewers = {
+        id           = "gcp-platform-viewers@example.com"
+        display_name = "GCP Platform Viewers"
+        description  = "Members have the ability to view resource information across the Google Cloud organization."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      scc_admins = {
+        id           = "gcp-scc-admins@example.com"
+        display_name = "GCP Security Command Center Admins"
+        description  = "Members can administer Security Command Center."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      secrets_admins = {
+        id           = "gcp-secrets-admins@example.com"
+        display_name = "GCP Secrets Manager Secrets Admins"
+        description  = "Members are responsible for putting secrets into Secrets Manager."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      security_admins = {
+        id           = "gcp-security-admins@example.com"
+        display_name = "GCP Security Admins"
+        description  = "Security admins are responsible for establishing and managing security policies for the entire organization, including access management and organization constraint policies."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+      security_reviewers = {
+        id           = "gcp-security-reviewers@example.com"
+        display_name = "GCP Security Reviewers"
+        description  = "Members are part of the security team responsible for reviewing cloud security."
+        owners       = []
+        managers     = []
+        members      = []
+      }
+    }
+  }
 }
 
 variable "default_zone" {
