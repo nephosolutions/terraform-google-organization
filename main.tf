@@ -27,7 +27,7 @@ module "audit_config" {
 
 module "bootstrap_project" {
   source  = "nephosolutions/gcp-project/google"
-  version = "~> 6.1.0"
+  version = "~> 7.1.0"
 
   billing_account = var.billing_account
   default_zone    = var.default_zone
@@ -37,21 +37,47 @@ module "bootstrap_project" {
   project_name    = "Google Cloud Organization"
 }
 
-module "iam_bindings" {
-  source = "./modules/iam_bindings"
-
-  org_id   = var.org_id
-  bindings = var.iam_bindings
-  editors  = var.editors
-  owners   = var.owners
-  viewers  = var.viewers
-}
-
 module "iam_memberships" {
-  source   = "./modules/iam_memberships"
-  for_each = var.iam_memberships
+  source = "./modules/iam_memberships"
+
+  for_each = {
+    /* Provides access to see and manage all aspects of billing accounts. */
+    "roles/billing.admin" = try(["group:${module.cloud_identity_group["billing_admins"].id}"], [])
+
+    /* Security admin role, with permissions to get and set any IAM policy. */
+    "roles/iam.securityAdmin" = try(["group:${module.cloud_identity_group["security_admins"].id}"], [])
+  }
 
   org_id  = var.org_id
   role    = each.key
+  members = each.value
+}
+
+resource "google_organization_iam_binding" "basic_role" {
+  /* There are several basic roles that existed prior to the introduction of IAM:
+      Owner, Editor, and Viewer. These roles are concentric; that is, the Owner role includes the permissions in the Editor role,
+      and the Editor role includes the permissions in the Viewer role. They were originally known as "primitive roles."
+
+     Caution:
+      Basic roles include thousands of permissions across all Google Cloud services.
+      In production environments, do not grant basic roles unless there is no alternative.
+      Instead, grant the most limited predefined roles or custom roles that meet your needs. */
+
+  for_each = {
+    // All viewer permissions, plus permissions for actions that modify state, such as changing existing resources.
+    editor = var.editors
+
+    /* All editor permissions and permissions for the following actions:
+            - Manage roles and permissions for a project and all resources within the project.
+            - Set up billing for a project. */
+    owner = var.owners
+
+    /* Permissions for read-only actions that do not affect state,
+        such as viewing (but not modifying) existing resources or data. */
+    viewer = var.viewers
+  }
+
+  org_id  = var.org_id
+  role    = "roles/${each.key}"
   members = each.value
 }

@@ -17,10 +17,7 @@ module "gcp_organization" {
 
   billing_account = var.billing_account
   default_zone    = "europe-west1-b"
-  editors         = []
   org_id          = var.org_id
-  owners          = []
-  viewers         = []
 
   cloud_identity_groups = {
     create_groups   = true

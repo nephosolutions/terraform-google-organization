@@ -219,6 +219,7 @@ variable "default_zone" {
 variable "editors" {
   description = "Identities that will be granted the basic role `editor` on the organization"
   type        = list(string)
+  default     = []
 }
 
 variable "essential_contacts_language" {
@@ -237,18 +238,6 @@ variable "iam_audit_config" {
   default = {}
 }
 
-variable "iam_bindings" {
-  description = "Updates the IAM policy to grant a role exclusively to the list of members."
-  type        = map(list(string))
-  default     = {}
-}
-
-variable "iam_memberships" {
-  description = "Updates the IAM policy to grant a role to a list of members. Non-authoritative for a given role."
-  type        = map(list(string))
-  default     = {}
-}
-
 variable "org_id" {
   description = "The numeric ID of the Google Cloud organization."
   type        = string
@@ -257,9 +246,11 @@ variable "org_id" {
 variable "owners" {
   description = "Identities that will be granted the basic role `owner` on the organization"
   type        = list(string)
+  default     = []
 }
 
 variable "viewers" {
   description = "Identities that will be granted the basic role `viewer` on the organization"
   type        = list(string)
+  default     = []
 }
